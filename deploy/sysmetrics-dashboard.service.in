@@ -1,0 +1,12 @@
+[Unit]
+Description=SysMetrics Dashboard (servidor local dos logs)
+
+[Service]
+ExecStartPre=-@CE@ rm -f sysmetrics-dashboard
+ExecStart=@CE@ run --rm --name sysmetrics-dashboard @USERFLAGS@ -p 127.0.0.1:8765:8765 -v %h/system_logs:/logs:ro sysmetrics-dashboard:latest
+ExecStop=@CE@ stop -t 5 sysmetrics-dashboard
+Restart=on-failure
+RestartSec=5
+
+[Install]
+WantedBy=default.target

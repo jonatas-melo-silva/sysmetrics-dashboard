@@ -22,7 +22,7 @@ help: ## Lista os comandos
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-16s %s\n", $$1, $$2}'
 
 dev: ## Vite + servidor de logs em http://localhost:5173 (lê ~/system_logs)
-	$(CE) run --rm $(USERFLAGS) -e HOME=/tmp -e LOG_DIR=/logs -v $(CURDIR):/app -v $(HOME)/system_logs:/logs:ro -w /app -p 127.0.0.1:5173:5173 $(NODE_IMAGE) sh -c 'npx tsx server/main.ts & npm run dev -- --host'
+	$(CE) run --rm --name sysmetrics-dev $(USERFLAGS) -e HOME=/tmp -e LOG_DIR=/logs -v $(CURDIR):/app -v $(HOME)/system_logs:/logs:ro -w /app -p 127.0.0.1:5173:5173 $(NODE_IMAGE) sh -c 'trap "kill 0" INT TERM; npx tsx server/main.ts & npm run dev -- --host & wait'
 
 install: ## Instala as dependências (npm ci) dentro do container
 	$(RUN) $(NODE_IMAGE) npm ci
@@ -52,7 +52,8 @@ service-install: image ## Instala e liga o serviço systemd de usuário
 	mkdir -p $(UNIT_DIR)
 	sed -e 's|@CE@|$(CE)|g' -e 's|@USERFLAGS@|$(USERFLAGS)|g' deploy/sysmetrics-dashboard.service.in > $(UNIT_DIR)/sysmetrics-dashboard.service
 	systemctl --user daemon-reload
-	systemctl --user enable --now sysmetrics-dashboard
+	systemctl --user enable sysmetrics-dashboard
+	systemctl --user restart sysmetrics-dashboard
 
 shell: ## Abre um shell no container de desenvolvimento
 	$(RUN) -it $(NODE_IMAGE) bash

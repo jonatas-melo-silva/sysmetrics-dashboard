@@ -48,6 +48,7 @@ sysmetrics-dashboard/
 │   ├── App.tsx                          # página: busca dados, seletor de dia, atualização a cada 5 min
 │   ├── index.css                        # Tailwind e tema claro/escuro
 │   └── main.tsx                         # monta o React na página
+├── .dockerignore                        # o que fica fora do contexto da imagem
 ├── .editorconfig                        # indentação e fim de linha padronizados
 ├── .gitignore                           # o que o git ignora
 ├── .prettierignore                      # o que o Prettier ignora

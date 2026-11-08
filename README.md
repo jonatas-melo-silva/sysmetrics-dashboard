@@ -74,7 +74,7 @@ O servidor é somente leitura, recusa qualquer `Host` que não seja `127.0.0.1` 
 
 ## Solução de problemas
 
-**A página diz que o servidor não respondeu.** Veja o estado do serviço com `systemctl --user status sysmetrics-dashboard` e os logs com `journalctl --user -u sysmetrics-dashboard`.
+**A página diz que o servidor não respondeu.** Veja o estado do serviço e as últimas linhas do log com `systemctl --user status sysmetrics-dashboard --no-pager -n 30`.
 
 **`/days` volta vazio mesmo com logs na pasta.** O container roda sem root e precisa de permissão de leitura nos arquivos. Confira com `ls -l ~/system_logs`: os `.jsonl` devem ter leitura para todos (`-rw-r--r--`).
 

@@ -15,11 +15,14 @@ endif
 
 RUN = $(CE) run --rm $(USERFLAGS) -e HOME=/tmp -v $(CURDIR):/app -w /app
 
-.PHONY: help install test lint typecheck format check build image service-install shell clean
+.PHONY: help dev install test lint typecheck format check build image service-install shell clean
 .DEFAULT_GOAL := help
 
 help: ## Lista os comandos
 	@grep -E '^[a-z-]+:.*## ' $(MAKEFILE_LIST) | awk -F':.*## ' '{printf "  %-16s %s\n", $$1, $$2}'
+
+dev: ## Vite + servidor de logs em http://localhost:5173 (lê ~/system_logs)
+	$(CE) run --rm $(USERFLAGS) -e HOME=/tmp -e LOG_DIR=/logs -v $(CURDIR):/app -v $(HOME)/system_logs:/logs:ro -w /app -p 127.0.0.1:5173:5173 $(NODE_IMAGE) sh -c 'npx tsx server/main.ts & npm run dev -- --host'
 
 install: ## Instala as dependências (npm ci) dentro do container
 	$(RUN) $(NODE_IMAGE) npm ci
@@ -39,8 +42,8 @@ format: ## Formata o código com Prettier
 check: ## Formatação, lint, tipos e testes, como no CI
 	$(RUN) $(NODE_IMAGE) sh -c 'npm run format:check && npm run lint && npm run typecheck && npm test'
 
-build: ## Gera dist-server/server.mjs
-	$(RUN) $(NODE_IMAGE) npm run build:server
+build: ## Gera a extensão em dist/ e o servidor em dist-server/server.mjs
+	$(RUN) $(NODE_IMAGE) sh -c 'npm run build && npm run build:server'
 
 image: ## Constrói a imagem do servidor
 	$(CE) build -f Containerfile -t $(IMAGE) .

@@ -4,16 +4,17 @@
 
 Tudo roda em container, então só são necessários Podman (ou Docker) e `make`. Não precisa ter Node instalado.
 
-| Comando        | O que faz                                                  |
-| -------------- | ---------------------------------------------------------- |
-| `make install` | Instala as dependências (`npm ci`)                         |
-| `make dev`     | Vite e servidor de logs em http://localhost:5173           |
-| `make check`   | Formatação, lint, tipos e testes, igual ao CI              |
-| `make test`    | Só os testes                                               |
-| `make lint`    | ESLint                                                     |
-| `make format`  | Prettier                                                   |
-| `make build`   | Extensão em `dist/` e servidor em `dist-server/server.mjs` |
-| `make shell`   | Shell dentro do container de desenvolvimento               |
+| Comando                  | O que faz                                                  |
+| ------------------------ | ---------------------------------------------------------- |
+| `make install`           | Instala as dependências (`npm ci`)                         |
+| `make dev`               | Vite e servidor de logs em http://localhost:5173           |
+| `make check`             | Formatação, lint, tipos e testes, igual ao CI              |
+| `make test`              | Só os testes                                               |
+| `make lint`              | ESLint                                                     |
+| `make format`            | Prettier                                                   |
+| `make build`             | Extensão em `dist/` e servidor em `dist-server/server.mjs` |
+| `make service-uninstall` | Desliga o serviço e remove a unit e a imagem do servidor   |
+| `make shell`             | Shell dentro do container de desenvolvimento               |
 
 O `make dev` lê os logs de `~/system_logs`. Sem logs, a página mostra o aviso de que nada foi encontrado.
 

@@ -15,7 +15,7 @@ endif
 
 RUN = $(CE) run --rm $(USERFLAGS) -e HOME=/tmp -v $(CURDIR):/app -w /app
 
-.PHONY: help dev install test lint typecheck format check build image service-install shell clean
+.PHONY: help dev install test lint typecheck format check build image service-install service-uninstall shell clean
 .DEFAULT_GOAL := help
 
 help: ## Lista os comandos
@@ -54,6 +54,12 @@ service-install: image ## Instala e liga o serviço systemd de usuário
 	systemctl --user daemon-reload
 	systemctl --user enable sysmetrics-dashboard
 	systemctl --user restart sysmetrics-dashboard
+
+service-uninstall: ## Desliga o serviço e apaga a unit e a imagem do servidor
+	-systemctl --user disable --now sysmetrics-dashboard
+	rm -f $(UNIT_DIR)/sysmetrics-dashboard.service
+	systemctl --user daemon-reload
+	-$(CE) rmi $(IMAGE)
 
 shell: ## Abre um shell no container de desenvolvimento
 	$(RUN) -it $(NODE_IMAGE) bash

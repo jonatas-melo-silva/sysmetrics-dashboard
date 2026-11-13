@@ -82,6 +82,17 @@ O servidor é somente leitura, recusa qualquer `Host` que não seja `127.0.0.1` 
 
 **Os gráficos têm poucos pontos.** Cada coleta é um ponto. Sem o cron rodando, só aparecem as coletas que você fez à mão.
 
+## Desinstalação
+
+```bash
+make service-uninstall
+make clean
+```
+
+O primeiro desliga o serviço, apaga o arquivo de serviço de `~/.config/systemd/user/` e remove a imagem do servidor. O segundo apaga `node_modules/`, `dist/` e `dist-server/` da pasta do projeto. Depois disso, remova a extensão em `brave://extensions` (botão Remover) e, se quiser, apague a pasta do projeto.
+
+Duas coisas ficam de propósito. Os logs em `~/system_logs` pertencem ao sysmetrics-collector e não são tocados. As imagens base `node:22-slim` e `node:22-alpine` podem servir a outros projetos, então se quiser removê-las rode `podman rmi docker.io/library/node:22-slim docker.io/library/node:22-alpine`, e o Podman recusa se alguma estiver em uso. Para limpar o que sobrou das etapas intermediárias do build, use `podman image prune`.
+
 ## Contribuindo
 
 O ambiente de desenvolvimento, os testes e o fluxo de PR estão em [CONTRIBUTING.md](CONTRIBUTING.md). O mapa de pastas e arquivos está em [docs/ARQUITETURA.md](docs/ARQUITETURA.md).
